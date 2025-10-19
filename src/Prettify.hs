@@ -1,0 +1,15 @@
+module Prettify where
+
+import SimpleJSON
+
+data Doc = ToBeDefined
+         deriving (Show)
+
+string :: String -> Doc
+string = enclose '"' '"' . hcat . map oneChar
+
+text :: String -> Doc
+text str = undefined
+
+double :: Double -> Doc
+double num = undefined
