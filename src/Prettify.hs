@@ -61,3 +61,11 @@ text str = Text str
 
 double :: Double -> Doc
 double num = Text (show num)
+
+fsep :: [Doc] -> Doc
+fsep = hcat 
+
+punctuate :: Doc -> [Doc] -> [Doc]
+punctuate p []     = []
+punctuate p [d]    = [d]
+punctuate p (d:ds) = (d <> p) : punctuate p ds
