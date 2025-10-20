@@ -12,16 +12,26 @@ data Doc = Empty
          | Line
          | Concat Doc Doc
          | Union Doc Doc
-         deriving (Show, Eq)
+           deriving (Show,Eq)
+
+empty :: Doc
+empty = Empty
 
 char :: Char -> Doc
 char c = Char c
 
-(<>) :: Doc -> Doc -> Doc
-a <> b = Concat a b
+text :: String -> Doc
+text "" = Empty
+text s  = Text s
+
+double :: Double -> Doc
+double d = text (show d)
+
+string :: String -> Doc
+string = enclose '"' '"' . hcat . map oneChar
 
 hcat :: [Doc] -> Doc
-hcat = foldr (<>) Empty
+hcat = fold (<>)
 
 enclose :: Char -> Char -> Doc -> Doc
 enclose left right x = char left <> x <> char right
@@ -53,19 +63,39 @@ hexEscape c | d < 0x10000 = smallHex d
             | otherwise   = astral (d - 0x10000)
     where d = ord c
 
-string :: String -> Doc
-string = enclose '"' '"' . hcat . map oneChar
-
-text :: String -> Doc
-text str = Text str
-
-double :: Double -> Doc
-double num = Text (show num)
-
 fsep :: [Doc] -> Doc
-fsep = hcat 
+fsep = fold (</>)
+
+(</>) :: Doc -> Doc -> Doc
+x </> y = x <> softline <> y
+
+softline :: Doc
+softline = group line
 
 punctuate :: Doc -> [Doc] -> [Doc]
 punctuate p []     = []
 punctuate p [d]    = [d]
 punctuate p (d:ds) = (d <> p) : punctuate p ds
+
+(<>) :: Doc -> Doc -> Doc
+Empty <> y = y
+x <> Empty = x
+x <> y = x `Concat` y
+
+line :: Doc
+line = Line
+
+concat :: [[a]] -> [a]
+concat = foldr (++) []
+
+fold :: (Doc -> Doc -> Doc) -> [Doc] -> Doc
+fold f = foldr f Empty
+
+group :: Doc -> Doc
+group x = flatten x \`Union\` x
+
+flatten :: Doc -> Doc
+flatten (x \`Concat\` y) = flatten x \`Concat\` flatten y
+flatten Line           = Char ' '
+flatten (x \`Union\` _)  = flatten x
+flatten other          = other

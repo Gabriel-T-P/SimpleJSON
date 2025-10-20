@@ -1,4 +1,7 @@
-module PrettyJSON where
+module PrettyJSON
+    (
+      renderJValue
+    ) where
 
 import SimpleJSON
 import Prettify
