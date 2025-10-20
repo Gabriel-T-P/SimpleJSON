@@ -130,4 +130,4 @@ fits :: Int -> String -> Bool
 w `fits` _ | w < 0 = False
 w `fits` ""        = True
 w `fits` ('\n':_)  = True
-w `fits` (c:cs)    = (w - 1) `fits` cs
+w `fits` (_:cs)    = (w - 1) `fits` cs
