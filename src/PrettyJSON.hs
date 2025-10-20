@@ -16,12 +16,12 @@ renderJValue (JNumber num) = double num
 renderJValue (JString str) = string str
 renderJValue (JArray ary)  = series '[' ']' renderJValue ary
 renderJValue (JObject obj) = series '{' '}' field obj
-    where field (name,val) = string name
+    where field (name, val) = string name
                            <> text ": "
                            <> renderJValue val
 
 series :: Char -> Char -> (a -> Doc) -> [a] -> Doc
 series open close item = enclose open close
-                         -- O uso de fsep e punctuate aqui é para a formatação
-                         -- de listas separadas por vírgula.
-                         . fsep . punctuate (char ',') . map item
+                       . fsep
+                       . punctuate (char ',')
+                       . map item

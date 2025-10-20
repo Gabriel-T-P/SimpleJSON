@@ -12,7 +12,7 @@ data Doc = Empty
          | Line
          | Concat Doc Doc
          | Union Doc Doc
-           deriving (Show,Eq)
+           deriving (Show, Eq)
 
 empty :: Doc
 empty = Empty
@@ -45,12 +45,12 @@ oneChar c = case lookup c simpleEscapes of
 
 simpleEscapes :: [(Char, String)]
 simpleEscapes = zipWith ch "\b\n\f\r\t\\\"/" "bnfrt\\\"/"
-    where ch a b = (a, ['\\',b])
+    where ch a b = (a, ['\\', b])
 
 smallHex :: Int -> Doc
-smallHex x  = text "\\u"
-            <> text (replicate (4 - length h) '0')
-            <> text h
+smallHex x = text "\\u"
+          <> text (replicate (4 - length h) '0')
+          <> text h
     where h = showHex x ""
 
 astral :: Int -> Doc
@@ -85,17 +85,14 @@ x <> y = x `Concat` y
 line :: Doc
 line = Line
 
-concat :: [[a]] -> [a]
-concat = foldr (++) []
-
 fold :: (Doc -> Doc -> Doc) -> [Doc] -> Doc
 fold f = foldr f Empty
 
 group :: Doc -> Doc
-group x = flatten x \`Union\` x
+group x = flatten x `Union` x
 
 flatten :: Doc -> Doc
-flatten (x \`Concat\` y) = flatten x \`Concat\` flatten y
+flatten (x `Concat` y) = flatten x `Concat` flatten y
 flatten Line           = Char ' '
-flatten (x \`Union\` _)  = flatten x
+flatten (x `Union` _)  = flatten x
 flatten other          = other
