@@ -154,7 +154,7 @@ Bridges JSON and Prettify by implementing `renderJValue` to convert JSON values 
 
 ## 👤 Author
 
-**Gabriel Thiago Tavares Ribeiro <Gabriel-T-P>**
+**Gabriel Thiago Tavares Ribeiro -->Gabriel-T-P<--**
 
 Repository: https://github.com/Gabriel-T-P/SimpleJSON
 
